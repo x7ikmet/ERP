@@ -1,0 +1,79 @@
+User (
+    UserID INT PRIMARY KEY IDENTITY,
+    Username NVARCHAR(50) UNIQUE NOT NULL,
+    PasswordHash NVARCHAR(255) NOT NULL,   -- hashed password
+    Email NVARCHAR(100),
+    Role NVARCHAR(50) CHECK (Role IN ('Admin', 'Sales', 'InventoryManager')),
+    IsActive BIT DEFAULT 1,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    LastLogin DATETIME NULL
+);
+
+Customer (
+    CustomerID INT PRIMARY KEY IDENTITY,
+    Name NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100),
+    Phone NVARCHAR(20),
+    Address NVARCHAR(255),
+    CompanyName NVARCHAR(100),
+    TaxNumber NVARCHAR(50),
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+Category (
+    CategoryID INT PRIMARY KEY IDENTITY,
+    Name NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(255)
+);
+
+
+Product (
+    ProductID INT PRIMARY KEY IDENTITY,
+    Name NVARCHAR(100) NOT NULL,
+    SKU NVARCHAR(50) UNIQUE,
+    CategoryID INT FOREIGN KEY REFERENCES Category(CategoryID),
+    UnitPrice DECIMAL(10,2) NOT NULL,
+    CostPrice DECIMAL(10,2),
+    StockQuantity INT DEFAULT 0,
+    ReorderLevel INT DEFAULT 10,
+    Description NVARCHAR(255),
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+SalesOrder (
+    OrderID INT PRIMARY KEY IDENTITY,
+    CustomerID INT FOREIGN KEY REFERENCES Customer(CustomerID),
+    UserID INT FOREIGN KEY REFERENCES User(UserID), -- created by this user
+    OrderDate DATETIME DEFAULT GETDATE(),
+    Status NVARCHAR(50) CHECK (Status IN ('Pending', 'Paid', 'Shipped', 'Cancelled')),
+    TotalAmount DECIMAL(12,2),
+    PaymentMethod NVARCHAR(50) CHECK (PaymentMethod IN ('Cash', 'Card', 'Transfer')),
+    Notes NVARCHAR(255)
+);
+
+SalesOrderDetail (
+    OrderDetailID INT PRIMARY KEY IDENTITY,
+    OrderID INT FOREIGN KEY REFERENCES SalesOrder(OrderID),
+    ProductID INT FOREIGN KEY REFERENCES Product(ProductID),
+    Quantity INT NOT NULL,
+    UnitPrice DECIMAL(10,2) NOT NULL,
+    Total DECIMAL(12,2) AS (Quantity * UnitPrice) PERSISTED
+);
+
+InventoryTransaction (
+    TransactionID INT PRIMARY KEY IDENTITY,
+    ProductID INT FOREIGN KEY REFERENCES Product(ProductID),
+    QuantityChange INT NOT NULL,  -- + for purchase, - for sale
+    TransactionType NVARCHAR(50) CHECK (TransactionType IN ('Sale', 'Purchase', 'Adjustment')),
+    ReferenceID INT NULL, -- e.g. OrderID or PurchaseID
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+RefreshToken (
+    TokenID INT PRIMARY KEY IDENTITY,
+    UserID INT FOREIGN KEY REFERENCES User(UserID),
+    Token NVARCHAR(500) NOT NULL,
+    ExpiryDate DATETIME NOT NULL,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    IsRevoked BIT DEFAULT 0
+);

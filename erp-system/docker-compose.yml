@@ -1,0 +1,10 @@
+services:
+  erp.api:
+    image: ${DOCKER_REGISTRY-}erpapi
+    build:
+      context: .
+      dockerfile: ERP.Api/Dockerfile
+    ports:
+        - 5000:8080
+        - 5001:8081
+

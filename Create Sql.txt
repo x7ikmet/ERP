@@ -1,0 +1,113 @@
+CREATE DATABASE erp_system;
+\c erp_system;
+
+-- =============================
+-- USERS (JWT Authentication)
+-- =============================
+CREATE TABLE "User" (
+    "UserID" SERIAL PRIMARY KEY,
+    "Username" VARCHAR(50) UNIQUE NOT NULL,
+    "PasswordHash" VARCHAR(255) NOT NULL,
+    "Email" VARCHAR(100),
+    "Role" VARCHAR(50) NOT NULL CHECK ("Role" IN ('Admin', 'Sales', 'InventoryManager')),
+    "IsActive" BOOLEAN DEFAULT TRUE,
+    "CreatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "LastLogin" TIMESTAMP
+);
+
+-- =============================
+-- REFRESH TOKENS (JWT Refresh Support)
+-- =============================
+CREATE TABLE "RefreshToken" (
+    "TokenID" SERIAL PRIMARY KEY,
+    "UserID" INT NOT NULL REFERENCES "User"("UserID") ON DELETE CASCADE,
+    "Token" VARCHAR(500) NOT NULL,
+    "ExpiryDate" TIMESTAMP NOT NULL,
+    "CreatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "IsRevoked" BOOLEAN DEFAULT FALSE
+);
+
+-- =============================
+-- CUSTOMERS
+-- =============================
+CREATE TABLE "Customer" (
+    "CustomerID" SERIAL PRIMARY KEY,
+    "Name" VARCHAR(100) NOT NULL,
+    "Email" VARCHAR(100),
+    "Phone" VARCHAR(20),
+    "Address" VARCHAR(255),
+    "CompanyName" VARCHAR(100),
+    "TaxNumber" VARCHAR(50),
+    "CreatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =============================
+-- PRODUCT CATEGORIES
+-- =============================
+CREATE TABLE "Category" (
+    "CategoryID" SERIAL PRIMARY KEY,
+    "Name" VARCHAR(100) NOT NULL,
+    "Description" VARCHAR(255)
+);
+
+-- =============================
+-- PRODUCTS
+-- =============================
+CREATE TABLE "Product" (
+    "ProductID" SERIAL PRIMARY KEY,
+    "Name" VARCHAR(100) NOT NULL,
+    "SKU" VARCHAR(50) UNIQUE,
+    "CategoryID" INT REFERENCES "Category"("CategoryID") ON DELETE SET NULL,
+    "UnitPrice" DECIMAL(10,2) NOT NULL,
+    "CostPrice" DECIMAL(10,2),
+    "StockQuantity" INT DEFAULT 0,
+    "ReorderLevel" INT DEFAULT 10,
+    "Description" VARCHAR(255),
+    "CreatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =============================
+-- SALES ORDERS
+-- =============================
+CREATE TABLE "SalesOrder" (
+    "OrderID" SERIAL PRIMARY KEY,
+    "CustomerID" INT REFERENCES "Customer"("CustomerID") ON DELETE CASCADE,
+    "UserID" INT REFERENCES "User"("UserID") ON DELETE SET NULL,
+    "OrderDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "Status" VARCHAR(50) CHECK ("Status" IN ('Pending', 'Paid', 'Shipped', 'Cancelled')),
+    "TotalAmount" DECIMAL(12,2),
+    "PaymentMethod" VARCHAR(50) CHECK ("PaymentMethod" IN ('Cash', 'Card', 'Transfer')),
+    "Notes" VARCHAR(255)
+);
+
+-- =============================
+-- SALES ORDER DETAILS
+-- =============================
+CREATE TABLE "SalesOrderDetail" (
+    "OrderDetailID" SERIAL PRIMARY KEY,
+    "OrderID" INT REFERENCES "SalesOrder"("OrderID") ON DELETE CASCADE,
+    "ProductID" INT REFERENCES "Product"("ProductID") ON DELETE CASCADE,
+    "Quantity" INT NOT NULL,
+    "UnitPrice" DECIMAL(10,2) NOT NULL,
+    "Total" DECIMAL(12,2) GENERATED ALWAYS AS ("Quantity" * "UnitPrice") STORED
+);
+
+-- =============================
+-- INVENTORY TRANSACTIONS
+-- =============================
+CREATE TABLE "InventoryTransaction" (
+    "TransactionID" SERIAL PRIMARY KEY,
+    "ProductID" INT REFERENCES "Product"("ProductID") ON DELETE CASCADE,
+    "QuantityChange" INT NOT NULL,
+    "TransactionType" VARCHAR(50) CHECK ("TransactionType" IN ('Sale', 'Purchase', 'Adjustment')),
+    "ReferenceID" INT,
+    "CreatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =============================
+-- INDEXES
+-- =============================
+CREATE INDEX idx_user_role ON "User"("Role");
+CREATE INDEX idx_product_category ON "Product"("CategoryID");
+CREATE INDEX idx_salesorder_customer ON "SalesOrder"("CustomerID");
+CREATE INDEX idx_inventory_product ON "InventoryTransaction"("ProductID");
