@@ -1,79 +1,130 @@
-User (
-    UserID INT PRIMARY KEY IDENTITY,
-    Username NVARCHAR(50) UNIQUE NOT NULL,
-    PasswordHash NVARCHAR(255) NOT NULL,   -- hashed password
-    Email NVARCHAR(100),
-    Role NVARCHAR(50) CHECK (Role IN ('Admin', 'Sales', 'InventoryManager')),
-    IsActive BIT DEFAULT 1,
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    LastLogin DATETIME NULL
+-- Use a schema if you like (optional)
+CREATE SCHEMA IF NOT EXISTS erp;
+SET search_path = erp, public;
+
+-- Users & roles
+CREATE TABLE roles (
+    id   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT
 );
 
-Customer (
-    CustomerID INT PRIMARY KEY IDENTITY,
-    Name NVARCHAR(100) NOT NULL,
-    Email NVARCHAR(100),
-    Phone NVARCHAR(20),
-    Address NVARCHAR(255),
-    CompanyName NVARCHAR(100),
-    TaxNumber NVARCHAR(50),
-    CreatedAt DATETIME DEFAULT GETDATE()
+CREATE TABLE users (
+    id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username      VARCHAR(100) NOT NULL UNIQUE,
+    email         VARCHAR(255) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL, -- store salted hash (bcrypt/Argon2)
+    full_name     VARCHAR(255),
+    role_id       INT NOT NULL,
+    is_active     BOOLEAN DEFAULT TRUE,
+    created_at    TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at    TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT
 );
 
-Category (
-    CategoryID INT PRIMARY KEY IDENTITY,
-    Name NVARCHAR(100) NOT NULL,
-    Description NVARCHAR(255)
+-- Categories
+CREATE TABLE categories (
+    id   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    slug VARCHAR(150) NOT NULL UNIQUE,
+    description TEXT
 );
 
-
-Product (
-    ProductID INT PRIMARY KEY IDENTITY,
-    Name NVARCHAR(100) NOT NULL,
-    SKU NVARCHAR(50) UNIQUE,
-    CategoryID INT FOREIGN KEY REFERENCES Category(CategoryID),
-    UnitPrice DECIMAL(10,2) NOT NULL,
-    CostPrice DECIMAL(10,2),
-    StockQuantity INT DEFAULT 0,
-    ReorderLevel INT DEFAULT 10,
-    Description NVARCHAR(255),
-    CreatedAt DATETIME DEFAULT GETDATE()
+-- Products
+CREATE TABLE products (
+    id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    sku           VARCHAR(100) UNIQUE, -- optional stock-keeping unit
+    name          VARCHAR(255) NOT NULL,
+    slug          VARCHAR(255) NOT NULL UNIQUE,
+    category_id   INT NOT NULL,
+    unit_price    NUMERIC(12,2) NOT NULL CHECK (unit_price >= 0),
+    cost_price    NUMERIC(12,2) DEFAULT 0 CHECK (cost_price >= 0),
+    stock_qty     INT NOT NULL DEFAULT 0 CHECK (stock_qty >= 0),
+    barcode       VARCHAR(100),
+    is_active     BOOLEAN DEFAULT TRUE,
+    created_at    TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at    TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT
 );
 
-SalesOrder (
-    OrderID INT PRIMARY KEY IDENTITY,
-    CustomerID INT FOREIGN KEY REFERENCES Customer(CustomerID),
-    UserID INT FOREIGN KEY REFERENCES User(UserID), -- created by this user
-    OrderDate DATETIME DEFAULT GETDATE(),
-    Status NVARCHAR(50) CHECK (Status IN ('Pending', 'Paid', 'Shipped', 'Cancelled')),
-    TotalAmount DECIMAL(12,2),
-    PaymentMethod NVARCHAR(50) CHECK (PaymentMethod IN ('Cash', 'Card', 'Transfer')),
-    Notes NVARCHAR(255)
+-- Suppliers
+CREATE TABLE suppliers (
+    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL UNIQUE,
+    contact_name VARCHAR(255),
+    email       VARCHAR(255),
+    phone       VARCHAR(50),
+    address     TEXT,
+    created_at  TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
-SalesOrderDetail (
-    OrderDetailID INT PRIMARY KEY IDENTITY,
-    OrderID INT FOREIGN KEY REFERENCES SalesOrder(OrderID),
-    ProductID INT FOREIGN KEY REFERENCES Product(ProductID),
-    Quantity INT NOT NULL,
-    UnitPrice DECIMAL(10,2) NOT NULL,
-    Total DECIMAL(12,2) AS (Quantity * UnitPrice) PERSISTED
+-- Customers
+CREATE TABLE customers (
+    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    email       VARCHAR(255) UNIQUE,
+    phone       VARCHAR(50),
+    address     TEXT,
+    created_at  TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
-InventoryTransaction (
-    TransactionID INT PRIMARY KEY IDENTITY,
-    ProductID INT FOREIGN KEY REFERENCES Product(ProductID),
-    QuantityChange INT NOT NULL,  -- + for purchase, - for sale
-    TransactionType NVARCHAR(50) CHECK (TransactionType IN ('Sale', 'Purchase', 'Adjustment')),
-    ReferenceID INT NULL, -- e.g. OrderID or PurchaseID
-    CreatedAt DATETIME DEFAULT GETDATE()
+-- Purchases (buy from suppliers)
+CREATE TABLE purchases (
+    id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    supplier_id   BIGINT NOT NULL,
+    purchase_no   VARCHAR(100) NOT NULL UNIQUE,
+    status        VARCHAR(30) NOT NULL DEFAULT 'pending', -- pending, completed, canceled
+    total_amount  NUMERIC(14,2) DEFAULT 0 CHECK (total_amount >= 0),
+    created_by    BIGINT, -- user id
+    created_at    TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at    TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    CONSTRAINT fk_purchases_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_purchases_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
-RefreshToken (
-    TokenID INT PRIMARY KEY IDENTITY,
-    UserID INT FOREIGN KEY REFERENCES User(UserID),
-    Token NVARCHAR(500) NOT NULL,
-    ExpiryDate DATETIME NOT NULL,
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    IsRevoked BIT DEFAULT 0
+CREATE TABLE purchase_items (
+    id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    purchase_id  BIGINT NOT NULL,
+    product_id   BIGINT NOT NULL,
+    quantity     INT NOT NULL CHECK (quantity > 0),
+    unit_cost    NUMERIC(12,2) NOT NULL CHECK (unit_cost >= 0),
+    line_total   NUMERIC(14,2) GENERATED ALWAYS AS (quantity * unit_cost) STORED,
+    CONSTRAINT fk_pi_purchase FOREIGN KEY (purchase_id) REFERENCES purchases(id) ON DELETE CASCADE,
+    CONSTRAINT fk_pi_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+);
+
+-- Sales
+CREATE TABLE sales (
+    id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    customer_id  BIGINT,
+    sales_no     VARCHAR(100) NOT NULL UNIQUE,
+    status       VARCHAR(30) NOT NULL DEFAULT 'draft', -- draft, completed, canceled
+    total_amount NUMERIC(14,2) DEFAULT 0 CHECK (total_amount >= 0),
+    created_by   BIGINT,
+    created_at   TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at   TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    CONSTRAINT fk_sales_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL,
+    CONSTRAINT fk_sales_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE sale_items (
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    sale_id    BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity   INT NOT NULL CHECK (quantity > 0),
+    unit_price NUMERIC(12,2) NOT NULL CHECK (unit_price >= 0),
+    line_total NUMERIC(14,2) GENERATED ALWAYS AS (quantity * unit_price) STORED,
+    CONSTRAINT fk_si_sale FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE,
+    CONSTRAINT fk_si_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+);
+
+-- Refresh tokens (for JWT refresh workflow)
+CREATE TABLE refresh_tokens (
+    id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id      BIGINT NOT NULL,
+    token_hash   TEXT NOT NULL, -- store hashed token or opaque id
+    expires_at   TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at   TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    revoked      BOOLEAN DEFAULT FALSE,
+    CONSTRAINT fk_rt_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

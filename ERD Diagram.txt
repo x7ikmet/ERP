@@ -1,0 +1,102 @@
+erDiagram
+
+    roles ||--o{ users : "has"
+
+    users ||--o{ purchases : "created_by"
+    users ||--o{ sales : "created_by"
+    users ||--o{ refresh_tokens : "has"
+
+    categories ||--o{ products : "has"
+
+    suppliers ||--o{ purchases : "belongs_to"
+
+    customers ||--o{ sales : "makes"
+
+    purchases ||--o{ purchase_items : "contains"
+    products ||--o{ purchase_items : "for"
+
+    sales ||--o{ sale_items : "contains"
+    products ||--o{ sale_items : "for"
+
+    roles {
+        int id PK
+        varchar name
+    }
+
+    users {
+        bigint id PK
+        varchar username
+        varchar email
+        text password_hash
+        int role_id FK
+    }
+
+    categories {
+        int id PK
+        varchar name
+        varchar slug
+    }
+
+    products {
+        bigint id PK
+        varchar sku
+        varchar name
+        varchar slug
+        int category_id FK
+        numeric unit_price
+        numeric cost_price
+        int stock_qty
+    }
+
+    suppliers {
+        bigint id PK
+        varchar name
+        varchar email
+        varchar phone
+    }
+
+    customers {
+        bigint id PK
+        varchar name
+        varchar email
+        varchar phone
+    }
+
+    purchases {
+        bigint id PK
+        bigint supplier_id FK
+        varchar purchase_no
+        numeric total_amount
+        bigint created_by FK
+    }
+
+    purchase_items {
+        bigint id PK
+        bigint purchase_id FK
+        bigint product_id FK
+        int quantity
+        numeric unit_cost
+    }
+
+    sales {
+        bigint id PK
+        bigint customer_id FK
+        varchar sales_no
+        numeric total_amount
+        bigint created_by FK
+    }
+
+    sale_items {
+        bigint id PK
+        bigint sale_id FK
+        bigint product_id FK
+        int quantity
+        numeric unit_price
+    }
+
+    refresh_tokens {
+        bigint id PK
+        bigint user_id FK
+        text token_hash
+        timestamp expires_at
+    }
