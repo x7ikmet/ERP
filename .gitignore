@@ -400,3 +400,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 .containers
+**/appsettings.Development.json
