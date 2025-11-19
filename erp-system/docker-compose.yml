@@ -8,3 +8,14 @@ services:
         - 5000:8080
         - 5001:8081
 
+  erp.postgres:
+    image: postgres:17.2
+    environment:
+      POSTGRES_DB: erpsystem
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./.containers/postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
