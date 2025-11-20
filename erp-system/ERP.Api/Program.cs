@@ -6,8 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers(options =>
+{
+    options.ReturnHttpNotAcceptable = true;
+})
+    .AddXmlSerializerFormatters();
 
-builder.Services.AddControllers();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

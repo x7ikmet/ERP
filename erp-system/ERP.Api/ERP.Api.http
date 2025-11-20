@@ -4,3 +4,46 @@ GET {{ERP.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{ERP.Api_HostAddress}}/products
+Accept: application/json
+
+###
+
+GET {{ERP.Api_HostAddress}}/products/1
+Accept: application/json
+
+###
+
+POST {{ERP.Api_HostAddress}}/products
+Content-Type: application/json
+
+{
+  "name": "Sample Product",
+  "sku": "SKU001",
+  "slug": "sample-product",
+  "categoryId": 1,
+  "unitPrice": 29.99,
+  "costPrice": 15.00,
+  "stockQty": 100,
+  "barcode": "1234567890123",
+  "isActive": true
+}
+
+###
+
+PUT {{ERP.Api_HostAddress}}/products/1
+Content-Type: application/json
+
+{
+  "name": "Updated Product Name",
+  "sku": "SKU001-UPDATED",
+  "slug": "updated-product-name",
+  "categoryId": 2,
+  "unitPrice": 39.99,
+  "costPrice": 20.00,
+  "stockQty": 75,
+  "barcode": "9876543210987",
+  "isActive": true
+}
+
