@@ -77,4 +77,23 @@ public sealed class ProductController(ApplicationDbContext dbContext) : Controll
 
         return NoContent();
     }
+
+
+    [HttpDelete("{id:long}")]
+    public async Task<ActionResult> DeleteProduct(long id)
+    {
+        Product? product = await dbContext
+            .Products
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (product is null)
+        {
+            return NotFound();
+        }
+
+        dbContext.Products.Remove(product);
+        await dbContext.SaveChangesAsync();
+
+        return NoContent();
+    }
 }

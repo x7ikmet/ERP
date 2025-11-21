@@ -47,3 +47,8 @@ Content-Type: application/json
   "isActive": true
 }
 
+###
+
+DELETE {{ERP.Api_HostAddress}}/products/1
+Accept: application/json
+
