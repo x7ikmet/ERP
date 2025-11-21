@@ -91,5 +91,12 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasColumnName("updated_at")
             .HasDefaultValueSql("now()")
             .IsRequired();
+
+        // Relationship: Product Many → One Category
+        builder.HasOne(p => p.Category)
+            .WithMany(c => c.Products)
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
     }
 }

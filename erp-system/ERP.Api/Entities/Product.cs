@@ -14,4 +14,7 @@ public sealed class Product
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    
+    // Navigation Property (Many-to-One)
+    public Category Category { get; set; } = null!;
 }

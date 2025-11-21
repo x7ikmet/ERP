@@ -52,3 +52,42 @@ Content-Type: application/json
 DELETE {{ERP.Api_HostAddress}}/products/1
 Accept: application/json
 
+###
+
+# Categories Endpoints
+
+GET {{ERP.Api_HostAddress}}/categories
+Accept: application/json
+
+###
+
+GET {{ERP.Api_HostAddress}}/categories/1
+Accept: application/json
+
+###
+
+POST {{ERP.Api_HostAddress}}/categories
+Content-Type: application/json
+
+{
+  "name": "Electronics",
+  "slug": "electronics",
+  "description": "Electronic devices and accessories"
+}
+
+###
+
+PUT {{ERP.Api_HostAddress}}/categories/1
+Content-Type: application/json
+
+{
+  "name": "Electronics & Gadgets",
+  "slug": "electronics-gadgets",
+  "description": "Updated description for electronic devices"
+}
+
+###
+
+DELETE {{ERP.Api_HostAddress}}/categories/1
+Accept: application/json
+
