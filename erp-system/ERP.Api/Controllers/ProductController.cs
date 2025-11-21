@@ -4,6 +4,7 @@ using ERP.Api.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ERP.Api.DTOs.Products;
+using FluentValidation;
 
 namespace ERP.Api.Controllers;
 
@@ -47,7 +48,10 @@ public sealed class ProductController(ApplicationDbContext dbContext) : Controll
     }
 
     [HttpPost]
-    public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto createProductDto){
+    public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto createProductDto, IValidator<CreateProductDto> validator){
+
+        await validator.ValidateAndThrowAsync(createProductDto);
+
         var product = createProductDto.ToEntity();
 
         dbContext.Products.Add(product);

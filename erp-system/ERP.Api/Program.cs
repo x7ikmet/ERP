@@ -1,5 +1,7 @@
 using ERP.Api.Database;
 using ERP.Api.Extensions;
+using ERP.Api.Middleware;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -12,6 +14,22 @@ builder.Services.AddControllers(options =>
 })
     .AddXmlSerializerFormatters();
 
+// FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+// HttpContextAccessor for validators
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+    };
+});
+
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -34,6 +52,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseExceptionHandler();
 
 app.MapControllers();
 

@@ -14,6 +14,8 @@ internal static class ProductQueries
             Name = p.Name,
             Slug = p.Slug,
             CategoryId = p.CategoryId,
+            CategoryName = p.Category.Name,
+            CategorySlug = p.Category.Slug,
             UnitPrice = p.UnitPrice,
             CostPrice = p.CostPrice,
             StockQty = p.StockQty,

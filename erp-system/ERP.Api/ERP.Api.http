@@ -10,7 +10,7 @@ Accept: application/json
 
 ###
 
-GET {{ERP.Api_HostAddress}}/products/1
+GET {{ERP.Api_HostAddress}}/products/2
 Accept: application/json
 
 ###
@@ -21,7 +21,7 @@ Content-Type: application/json
 {
   "name": "Sample Product",
   "sku": "SKU001",
-  "slug": "sample-product",
+  "slug": "sample-product1",
   "categoryId": 1,
   "unitPrice": 29.99,
   "costPrice": 15.00,

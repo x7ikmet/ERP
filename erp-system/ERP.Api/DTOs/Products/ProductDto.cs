@@ -11,6 +11,8 @@ public sealed record ProductDto
     public string Name { get; init; } = string.Empty;
     public string Slug { get; init; } = string.Empty;
     public int CategoryId { get; init; }
+    public string CategoryName { get; init; } = string.Empty;
+    public string CategorySlug { get; init; } = string.Empty;
     public decimal UnitPrice { get; init; }
     public decimal CostPrice { get; init; }
     public int StockQty { get; init; }

@@ -13,6 +13,8 @@ internal static class ProductMapping
             Name = p.Name,
             Slug = p.Slug,
             CategoryId = p.CategoryId,
+            CategoryName = p.Category?.Name ?? string.Empty,
+            CategorySlug = p.Category?.Slug ?? string.Empty,
             UnitPrice = p.UnitPrice,
             CostPrice = p.CostPrice,
             StockQty = p.StockQty,
