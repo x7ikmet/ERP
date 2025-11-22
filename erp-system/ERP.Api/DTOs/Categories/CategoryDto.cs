@@ -1,10 +1,5 @@
 namespace ERP.Api.DTOs.Categories;
 
-public sealed record CategoriesCollection
-{
-    public List<CategoryDto> Data { get; init; } = [];
-}
-
 public sealed record CategoryDto
 {
     public int Id { get; init; }

@@ -1,9 +1,5 @@
 ﻿namespace ERP.Api.DTOs.Products;
 
-public sealed record ProductsCollection{
-    public List<ProductDto> Data { get; init; }
-}
-
 public sealed record ProductDto
 {
     public long Id { get; init; }

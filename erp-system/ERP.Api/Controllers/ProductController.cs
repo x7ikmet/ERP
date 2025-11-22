@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ERP.Api.DTOs.Products;
 using FluentValidation;
+using ERP.Api.DTOs.Common;
 
 namespace ERP.Api.Controllers;
 
@@ -13,19 +14,29 @@ namespace ERP.Api.Controllers;
 public sealed class ProductController(ApplicationDbContext dbContext) : ControllerBase
 {
     [HttpGet]
-    public  async Task<ActionResult<ProductDto>> GetProduct()
+    public  async Task<ActionResult<PaginationResult<ProductDto>>> GetProducts(
+        [FromQuery] ProductsQueryParameters query
+        )
     {
-        List<ProductDto> products = await dbContext
+        var search = query.Search?.Trim().ToLower();
+        var categoryName = query.CategoryName?.Trim().ToLower();
+
+        IQueryable<ProductDto> productsQuery = dbContext
             .Products
-            .Select(ProductQueries.ProjectToDto())
-            .ToListAsync();
+            .Where(x => search == null ||
+                        x.Name.ToLower().Contains(search))
+            .Where(x => categoryName == null ||
+                        x.Category.Name.ToLower() == categoryName)
+            .Select(ProductQueries.ProjectToDto());
 
-        var productsCollection = new ProductsCollection
-        {
-            Data = products
-        };
+        var paginationResult = await PaginationResult<ProductDto>.CreateAsync(
+            productsQuery,
+            query.Page,
+            query.PageSize
+        );
 
-        return Ok(productsCollection);
+        return Ok(paginationResult);
+
     }
 
     

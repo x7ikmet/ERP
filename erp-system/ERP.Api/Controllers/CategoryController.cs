@@ -20,7 +20,7 @@ public sealed class CategoryController(ApplicationDbContext dbContext) : Control
 
         var categoriesCollection = new CategoriesCollection
         {
-            Data = categories
+            Items = categories
         };
 
         return Ok(categoriesCollection);

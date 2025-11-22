@@ -10,6 +10,36 @@ Accept: application/json
 
 ###
 
+# Search products by name (partial match, case-insensitive)
+GET {{ERP.Api_HostAddress}}/products?q=laptop
+Accept: application/json
+
+###
+
+# Search products - another example
+GET {{ERP.Api_HostAddress}}/products?q=Sample
+Accept: application/json
+
+###
+
+# Filter products by category name
+GET {{ERP.Api_HostAddress}}/products?category=Electronics
+Accept: application/json
+
+###
+
+# Search by name AND filter by category
+GET {{ERP.Api_HostAddress}}/products?q=laptop&category=Electronics
+Accept: application/json
+
+###
+
+
+GET {{ERP.Api_HostAddress}}/products?page=1&pageSize=2
+Accept: application/json
+
+###
+
 GET {{ERP.Api_HostAddress}}/products/2
 Accept: application/json
 
@@ -19,9 +49,9 @@ POST {{ERP.Api_HostAddress}}/products
 Content-Type: application/json
 
 {
-  "name": "Sample Product",
-  "sku": "SKU001",
-  "slug": "sample-product1",
+  "name": "laptop",
+  "sku": "SKU005",
+  "slug": "laptop1",
   "categoryId": 1,
   "unitPrice": 29.99,
   "costPrice": 15.00,
