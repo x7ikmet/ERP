@@ -11,7 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder
     .AddControllers()
     .AddErrorHandling()
-    .AddDatebase();
+    .AddDatebase()
+    .AddAuthenticationServices();
 
 var app = builder.Build();
 

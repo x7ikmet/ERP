@@ -1,6 +1,7 @@
 ﻿using ERP.Api.Database;
 using ERP.Api.Middleware;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Newtonsoft.Json.Serialization;
@@ -56,7 +57,25 @@ public static class DependencyInjection
             .UseSnakeCaseNamingConvention();
         });
 
+        builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
+        {
+            options.UseNpgsql(builder.Configuration.GetConnectionString("Database"),
+                npgsqlOptions => npgsqlOptions
+                    .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Ideninty))
+            .UseSnakeCaseNamingConvention();
+        });
+
         return builder;
 
+    }
+
+
+    public static WebApplicationBuilder AddAuthenticationServices(this WebApplicationBuilder builder)
+    {
+        builder.Services
+            .AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationIdentityDbContext>();
+
+        return builder;
     }
 }
