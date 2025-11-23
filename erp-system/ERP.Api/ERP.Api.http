@@ -32,7 +32,7 @@ Accept: application/json
 ###
 
 
-GET {{ERP.Api_HostAddress}}/products?page=2&pageSize=2
+GET {{ERP.Api_HostAddress}}/products?page=1&pageSize=2
 Accept: application/json
 
 ###
