@@ -2,6 +2,8 @@
 
 
 
+
+
 GET {{ERP.Api_HostAddress}}/products
 Accept: application/json
 
@@ -116,5 +118,28 @@ Content-Type: application/json
 ###
 
 DELETE {{ERP.Api_HostAddress}}/categories/1
+Accept: application/json
+
+###
+
+# Auth Endpoints
+
+# Register a new user
+POST {{ERP.Api_HostAddress}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "hikmet@hikmet.me",
+  "name": "Hikmet k.",
+  "password": "Password123!",
+  "confirmPassword": "Password123!"
+}
+
+###
+
+# User Endpoints
+
+# Get user by ID
+GET {{ERP.Api_HostAddress}}/users/u_019ab262-a063-7122-8220-d4581c35f926
 Accept: application/json
 
