@@ -3,9 +3,11 @@ using ERP.Api.Entities;
 using ERP.Api.DTOs.Categories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERP.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("categories")]
 public sealed class CategoryController(ApplicationDbContext dbContext) : ControllerBase

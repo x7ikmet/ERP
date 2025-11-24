@@ -1,10 +1,12 @@
 ﻿using ERP.Api.Database;
 using ERP.Api.DTOs.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("users")]
 public sealed class UsersController(ApplicationDbContext dbContext) : ControllerBase()

@@ -137,6 +137,17 @@ Content-Type: application/json
 
 ###
 
+# Login user
+POST {{ERP.Api_HostAddress}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "hikmet@hikmet.me",
+  "password": "Password123!"
+}
+
+###
+
 # User Endpoints
 
 # Get user by ID

@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using ERP.Api.DTOs.Products;
 using FluentValidation;
 using ERP.Api.DTOs.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERP.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("products")]
 public sealed class ProductController(ApplicationDbContext dbContext) : ControllerBase

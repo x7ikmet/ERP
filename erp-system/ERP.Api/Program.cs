@@ -12,6 +12,7 @@ builder
     .AddControllers()
     .AddErrorHandling()
     .AddDatebase()
+    .AddApplicationServices()
     .AddAuthenticationServices();
 
 var app = builder.Build();
@@ -25,6 +26,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseExceptionHandler();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllers();
 
