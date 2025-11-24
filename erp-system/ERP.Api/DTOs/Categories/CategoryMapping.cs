@@ -16,11 +16,12 @@ internal static class CategoryMapping
         };
     }
 
-    public static Category ToEntity(this CreateCategoryDto dto)
+    public static Category ToEntity(this CreateCategoryDto dto, string userId)
     {
         return new Category
         {
             Name = dto.Name,
+            UserId = userId,
             Slug = dto.Slug,
             Description = dto.Description
         };

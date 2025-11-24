@@ -21,6 +21,8 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasColumnName("id")
             .ValueGeneratedOnAdd();
 
+        builder.Property(p => p.UserId).HasMaxLength(500);
+
         // SKU - Optional, Unique
         builder.Property(p => p.Sku)
             .HasColumnName("sku")
@@ -98,5 +100,9 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
+
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(p => p.UserId);
     }
 }

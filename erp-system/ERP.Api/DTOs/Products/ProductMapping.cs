@@ -25,11 +25,12 @@ internal static class ProductMapping
         };
     }
 
-    public static Product ToEntity(this CreateProductDto dto)
+    public static Product ToEntity(this CreateProductDto dto, string userId)
     {
         Product product = new()
         {
             Sku = dto.Sku,
+            UserId = userId,
             Name = dto.Name,
             Slug = dto.Slug,
             CategoryId = dto.CategoryId,

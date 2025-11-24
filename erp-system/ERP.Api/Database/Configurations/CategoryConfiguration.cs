@@ -16,11 +16,16 @@ public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasColumnName("id")
             .ValueGeneratedOnAdd();
 
+        // UserId
+        builder.Property(p => p.UserId).HasMaxLength(500);
+
         // Name - Required
         builder.Property(c => c.Name)
             .HasColumnName("name")
             .HasMaxLength(150)
             .IsRequired();
+
+        builder.HasIndex(c => new { c.UserId, c.Name }).IsUnique();
 
         // Slug - Required, Unique
         builder.Property(c => c.Slug)
@@ -28,8 +33,7 @@ public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasMaxLength(150)
             .IsRequired();
         
-        builder.HasIndex(c => c.Slug)
-            .IsUnique();
+        builder.HasIndex(c => new { c.UserId, c.Slug } ).IsUnique();
 
         // Description - Optional
         builder.Property(c => c.Description)
@@ -43,5 +47,9 @@ public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
+
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(c => c.UserId);
     }
 }
