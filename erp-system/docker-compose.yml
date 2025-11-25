@@ -1,3 +1,4 @@
+name: erp-system
 services:
   erp.api:
     image: ${DOCKER_REGISTRY-}erpapi
@@ -7,6 +8,21 @@ services:
     ports:
         - 5000:8080
         - 5001:8081
+    depends_on:
+      - erp.postgres
+
+  client:
+    image: ${DOCKER_REGISTRY-}client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - erp.api
+    environment:
+      - API_URL=http://erp.api:8080/api
+
 
   erp.postgres:
     image: postgres:17.2
@@ -14,8 +30,12 @@ services:
       POSTGRES_DB: erpsystem
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    # volumes:
+    #   - ./.containers/postgres_data:/var/lib/postgresql/data
     volumes:
-      - ./.containers/postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - 54320:5432
-
+      - 15432:5432
+volumes:
+  postgres_data:
+    external: true
