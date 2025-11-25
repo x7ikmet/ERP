@@ -14,6 +14,5 @@ public sealed class Customer
     public DateTime? UpdatedAt { get; set; }
     
     // Navigation Properties
-    // Note: Sales will be added when Sale entity is implemented
-    // public ICollection<Sale> Sales { get; set; } = [];
+    public ICollection<Sale> Sales { get; set; } = [];
 }
