@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "c1c46cf1-3cfd-4cd4-b395-ff0fc19af4da",
+		"_postman_id": "20ea27d4-5957-4e29-8e69-2448cb8dbfa2",
 		"name": "ERP",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "47383481",
-		"_collection_link": "https://x7ikmet-8060317.postman.co/workspace/Hikmet's-Workspace~098cc781-46f4-4beb-8603-0a5f6ed49430/collection/47383481-c1c46cf1-3cfd-4cd4-b395-ff0fc19af4da?action=share&source=collection_link&creator=47383481"
+		"_collection_link": "https://x7ikmet-8060317.postman.co/workspace/Hikmet's-Workspace~098cc781-46f4-4beb-8603-0a5f6ed49430/collection/47383481-20ea27d4-5957-4e29-8e69-2448cb8dbfa2?action=share&source=collection_link&creator=47383481"
 	},
 	"item": [
 		{
@@ -31,12 +31,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/auth/login",
-							"protocol": "https",
+							"raw": "{{baseURL}}}/auth/login",
 							"host": [
-								"localhost"
+								"{{baseURL}}}"
 							],
-							"port": "5001",
 							"path": [
 								"auth",
 								"login"
@@ -66,12 +64,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/auth/refresh",
-							"protocol": "https",
+							"raw": "{{baseURL}}/auth/refresh",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"auth",
 								"refresh"
@@ -104,12 +100,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/auth/register",
-							"protocol": "https",
+							"raw": "{{baseURL}}/auth/register",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"auth",
 								"register"
@@ -142,12 +136,10 @@
 							"raw": "{\r\n    \"name\": \"Daily Coding\",\r\n    \"description\": \"The new description of the habit\",\r\n    \"type\": 2,\r\n    \"frequency\": {\r\n        \"type\": 1,\r\n        \"timePerPeriod\": 1\r\n    },\r\n    \"target\": {\r\n        \"value\": 45,\r\n        \"unit\": \"minutes\"\r\n    },\r\n    \"milestone\": {\r\n        \"target\": 100\r\n    }\r\n}"
 						},
 						"url": {
-							"raw": "https://localhost:5001/products",
-							"protocol": "https",
+							"raw": "{{baseURL}}/products",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"products"
 							]
@@ -161,12 +153,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5001/products",
-							"protocol": "https",
+							"raw": "{{baseURL}}/products",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"products"
 							]
@@ -198,12 +188,10 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://localhost:5001/users/me",
-							"protocol": "https",
+							"raw": "{{baseURL}}/users/me",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"users",
 								"me"
@@ -218,12 +206,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5001/users/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/users/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"users",
 								":id"
@@ -264,12 +250,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/categories",
-							"protocol": "https",
+							"raw": "{{baseURL}}/categories",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"categories"
 							]
@@ -281,7 +265,10 @@
 					"name": "Get categories",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -309,12 +296,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/categories/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/categories/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"categories",
 								":id"
@@ -346,12 +331,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/suppliers",
-							"protocol": "https",
+							"raw": "{{baseURL}}/suppliers",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"suppliers"
 							]
@@ -371,12 +354,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/suppliers?isActive=true",
-							"protocol": "https",
+							"raw": "{{baseURL}}/suppliers?isActive=true",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"suppliers"
 							],
@@ -402,12 +383,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/suppliers/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/suppliers/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"suppliers",
 								":id"
@@ -448,12 +427,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/suppliers",
-							"protocol": "https",
+							"raw": "{{baseURL}}/suppliers",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"suppliers"
 							]
@@ -487,12 +464,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/suppliers/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/suppliers/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"suppliers",
 								":id"
@@ -519,12 +494,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/suppliers/:id/toggle-status",
-							"protocol": "https",
+							"raw": "{{baseURL}}/suppliers/:id/toggle-status",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"suppliers",
 								":id",
@@ -552,12 +525,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/suppliers/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/suppliers/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"suppliers",
 								":id"
@@ -589,12 +560,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/customers",
-							"protocol": "https",
+							"raw": "{{baseURL}}/customers",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"customers"
 							]
@@ -614,12 +583,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/customers?isActive=true",
-							"protocol": "https",
+							"raw": "{{baseURL}}/customers?isActive=true",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"customers"
 							],
@@ -645,12 +612,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/customers/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/customers/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"customers",
 								":id"
@@ -691,12 +656,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/customers",
-							"protocol": "https",
+							"raw": "{{baseURL}}/customers",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"customers"
 							]
@@ -730,12 +693,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/customers/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/customers/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"customers",
 								":id"
@@ -762,12 +723,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/customers/:id/toggle-status",
-							"protocol": "https",
+							"raw": "{{baseURL}}/customers/:id/toggle-status",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"customers",
 								":id",
@@ -795,12 +754,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/customers/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/customers/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"customers",
 								":id"
@@ -832,12 +789,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/sales",
-							"protocol": "https",
+							"raw": "{{baseURL}}/sales",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"sales"
 							]
@@ -857,12 +812,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/sales?status=draft&customer=1&search=SALE-&page=1&pageSize=10",
-							"protocol": "https",
+							"raw": "{{baseURL}}/sales?status=draft&search=SALE-&page=1&pageSize=10",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"sales"
 							],
@@ -875,7 +828,8 @@
 								{
 									"key": "customer",
 									"value": "1",
-									"description": "Filter by customer ID"
+									"description": "Filter by customer ID",
+									"disabled": true
 								},
 								{
 									"key": "search",
@@ -921,12 +875,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/sales/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/sales/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"sales",
 								":id"
@@ -959,7 +911,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"customerId\": 1,\r\n  \"items\": [\r\n    {\r\n      \"productId\": 1,\r\n      \"quantity\": 2,\r\n      \"unitPrice\": 99.99\r\n    },\r\n    {\r\n      \"productId\": 2,\r\n      \"quantity\": 1,\r\n      \"unitPrice\": 149.99\r\n    }\r\n  ]\r\n}",
+							"raw": "{\r\n  \"customerId\": 1,\r\n  \"items\": [\r\n    {\r\n      \"productId\": 3,\r\n      \"quantity\": 2,\r\n      \"unitPrice\": 99.99\r\n    },\r\n    {\r\n      \"productId\": 4,\r\n      \"quantity\": 1,\r\n      \"unitPrice\": 149.99\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -967,12 +919,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/sales",
-							"protocol": "https",
+							"raw": "{{baseURL}}/sales",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"sales"
 							]
@@ -998,7 +948,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": 1,\r\n      \"quantity\": 1,\r\n      \"unitPrice\": 29.99\r\n    }\r\n  ]\r\n}",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": 4,\r\n      \"quantity\": 1,\r\n      \"unitPrice\": 29.99\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1006,12 +956,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/sales",
-							"protocol": "https",
+							"raw": "{{baseURL}}/sales",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"sales"
 							]
@@ -1045,12 +993,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/sales/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/sales/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"sales",
 								":id"
@@ -1077,12 +1023,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/sales/:id/complete",
-							"protocol": "https",
+							"raw": "{{baseURL}}/sales/:id/complete",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"sales",
 								":id",
@@ -1110,12 +1054,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/sales/:id/cancel",
-							"protocol": "https",
+							"raw": "{{baseURL}}/sales/:id/cancel",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"sales",
 								":id",
@@ -1143,12 +1085,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:5001/sales/:id",
-							"protocol": "https",
+							"raw": "{{baseURL}}/sales/:id",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "5001",
 							"path": [
 								"sales",
 								":id"
@@ -1171,7 +1111,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJFUlAuYXBwIiwiaXNzIjoiRVJQLmFwaSIsImV4cCI6MTc2NDAxMDM1OSwic3ViIjoiNDFmMmJkYzktMTcyZC00YTQ3LTk3ZWUtNGM0MDg2NjVkYmUwIiwiZW1haWwiOiJoaWttZXQxQGhpa21ldC5tZSIsImlhdCI6MTc2NDAwODU1OSwibmJmIjoxNzY0MDA4NTU5fQ.zybdor-HlOip09BTlEdlWpl0IyenasiNSR8w47a2WFI",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJFUlAuYXBwIiwiaXNzIjoiRVJQLmFwaSIsImV4cCI6MTc2NDA5OTcyOSwic3ViIjoiNDFkOTBhOTMtOGY2Yy00YzQwLTgxODUtNWE3MjBiMDdiODQwIiwiZW1haWwiOiJoaWttZXRAaGlrbWV0Lm1lIiwiaWF0IjoxNzY0MDk3OTI5LCJuYmYiOjE3NjQwOTc5Mjl9.UcybZJ1vtmlAPuBdu-894Gx0GcuIzdvjs7WvdW5275Y",
 				"type": "string"
 			}
 		]
@@ -1198,6 +1138,12 @@
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
 		}
 	]
 }
