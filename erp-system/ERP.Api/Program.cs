@@ -27,6 +27,8 @@ app.UseHttpsRedirection();
 
 app.UsePathBase("/api");
 
+app.UseCors("AllowFrontend");
+
 app.UseExceptionHandler();
 
 app.UseAuthentication();
