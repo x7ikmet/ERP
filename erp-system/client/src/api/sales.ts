@@ -1,4 +1,4 @@
-import { apiClient, type QueryParams, buildQueryString } from './client';
+import { apiClient, type QueryParams, type PaginatedResponse, buildQueryString } from './client';
 import type { Customer } from './customers';
 import type { Product } from './products';
 
@@ -16,17 +16,16 @@ export interface SaleItem {
 
 export interface Sale {
   id: number;
-  saleNumber: string;
+  saleNo: string;
   customerId?: number;
   customer?: Customer;
   status: 'draft' | 'completed' | 'canceled';
-  subtotal: number;
-  tax?: number;
-  total: number;
+  subtotalAmount: number;
+  taxAmount: number;
+  totalAmount: number;
   items: SaleItem[];
   createdAt: string;
   updatedAt: string;
-  completedAt?: string;
 }
 
 export interface CreateSaleRequest {
@@ -57,9 +56,9 @@ export const salesApi = {
   /**
    * Get all sales with optional filtering
    */
-  async getSales(params?: SaleQueryParams): Promise<Sale[]> {
+  async getSales(params?: SaleQueryParams): Promise<PaginatedResponse<Sale>> {
     const queryString = params ? buildQueryString(params) : '';
-    return apiClient.get<Sale[]>(`/sales${queryString}`);
+    return apiClient.get<PaginatedResponse<Sale>>(`/sales${queryString}`);
   },
 
   /**

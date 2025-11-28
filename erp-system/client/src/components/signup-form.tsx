@@ -65,7 +65,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       
       // Redirect to dashboard
       setTimeout(() => {
-        window.location.href = '/dashboard'
+        window.location.href = '/'
       }, 1000)
       
     } catch (error: any) {

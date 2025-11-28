@@ -15,6 +15,11 @@ export interface Customer {
   updatedAt: string;
 }
 
+export interface CustomersCollection {
+  items: Customer[];
+  totalCount: number;
+}
+
 export interface CreateCustomerRequest {
   name: string;
   email: string;
@@ -40,9 +45,9 @@ export const customersApi = {
   /**
    * Get all customers with optional filtering
    */
-  async getCustomers(params?: CustomerQueryParams): Promise<Customer[]> {
+  async getCustomers(params?: CustomerQueryParams): Promise<CustomersCollection> {
     const queryString = params ? buildQueryString(params) : '';
-    return apiClient.get<Customer[]>(`/customers${queryString}`);
+    return apiClient.get<CustomersCollection>(`/customers${queryString}`);
   },
 
   /**

@@ -92,9 +92,10 @@ export const tokenManager = {
       
       // Also store in cookies for server-side middleware access
       // Use secure=false for localhost development
+      // Use samesite=lax to allow cookies to be sent on redirects
       const isProduction = window.location.protocol === 'https:';
-      document.cookie = `accessToken=${tokens.accessToken}; path=/; ${isProduction ? 'secure;' : ''} samesite=strict; max-age=86400`;
-      document.cookie = `refreshToken=${tokens.refreshToken}; path=/; ${isProduction ? 'secure;' : ''} samesite=strict; max-age=604800`;
+      document.cookie = `accessToken=${tokens.accessToken}; path=/; ${isProduction ? 'secure;' : ''} samesite=lax; max-age=86400`;
+      document.cookie = `refreshToken=${tokens.refreshToken}; path=/; ${isProduction ? 'secure;' : ''} samesite=lax; max-age=604800`;
     }
   },
 

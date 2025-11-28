@@ -13,6 +13,7 @@ import { suppliersApi } from './suppliers';
 import { customersApi } from './customers';
 import { productsApi } from './products';
 import { salesApi } from './sales';
+import { statisticsApi } from './statistics';
 
 // Core client and types
 export { apiClient, ApiError, buildQueryString } from './client';
@@ -58,6 +59,7 @@ export type {
 export { customersApi };
 export type {
   Customer,
+  CustomersCollection,
   CreateCustomerRequest,
   UpdateCustomerRequest,
   CustomerQueryParams
@@ -82,6 +84,15 @@ export type {
   SaleQueryParams
 } from './sales';
 
+// Statistics
+export { statisticsApi };
+export type {
+  DashboardStatistics,
+  SalesStatistics,
+  ProductStatistics,
+  CustomerStatistics
+} from './statistics';
+
 // Convenience object for accessing all APIs
 export const api = {
   auth: authApi,
@@ -91,4 +102,5 @@ export const api = {
   customers: customersApi,
   products: productsApi,
   sales: salesApi,
+  statistics: statisticsApi,
 };

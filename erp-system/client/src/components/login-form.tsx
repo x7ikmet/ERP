@@ -60,12 +60,10 @@ export function LoginForm({
       
       // Check for redirect parameter
       const urlParams = new URLSearchParams(window.location.search)
-      const redirect = urlParams.get('redirect') || '/dashboard'
+      const redirect = urlParams.get('redirect') || '/'
       
-      // Redirect to dashboard or intended page after showing success message
-      setTimeout(() => {
-        window.location.href = redirect
-      }, 2000) // Longer delay to ensure user sees the success message
+      // Redirect to dashboard or intended page immediately
+      window.location.href = redirect
       
     } catch (error: unknown) {
       console.error("Login failed:", error)
