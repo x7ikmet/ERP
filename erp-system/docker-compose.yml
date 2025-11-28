@@ -11,17 +11,17 @@ services:
     depends_on:
       - erp.postgres
 
-  client:
-    image: ${DOCKER_REGISTRY-}client
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    ports:
-      - 3000:3000
-    depends_on:
-      - erp.api
-    environment:
-      - API_URL=http://erp.api:8080/api
+  # client:
+  #   image: ${DOCKER_REGISTRY-}client
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - erp.api
+  #   environment:
+  #     - API_URL=http://erp.api:8080/api
 
 
   erp.postgres:

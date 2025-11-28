@@ -150,8 +150,28 @@
 				{
 					"name": "Create Product",
 					"request": {
-						"method": "GET",
-						"header": [],
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"iPhone 15 Pro\",\r\n  \"sku\": \"IP15PRO128\",\r\n  \"slug\": \"iphone-15-pro\",\r\n  \"categoryId\": 1,\r\n  \"unitPrice\": 999.99,\r\n  \"costPrice\": 750.00,\r\n  \"stockQty\": 50,\r\n  \"barcode\": \"1234567890123\",\r\n  \"isActive\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{baseURL}}/products",
 							"host": [
@@ -767,6 +787,179 @@
 									"key": "id",
 									"value": "1"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Statistics",
+			"item": [
+				{
+					"name": "Get Dashboard Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/statistics/dashboard",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"statistics",
+								"dashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Sales",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/statistics/total-sales",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"statistics",
+								"total-sales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/statistics/total-products",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"statistics",
+								"total-products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Customers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/statistics/total-customers",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"statistics",
+								"total-customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Sales Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/statistics/sales",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"statistics",
+								"sales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/statistics/products",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"statistics",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/statistics/customers",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"statistics",
+								"customers"
 							]
 						}
 					},
