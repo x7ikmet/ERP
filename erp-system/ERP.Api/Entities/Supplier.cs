@@ -14,6 +14,5 @@ public sealed class Supplier
     public DateTime? UpdatedAt { get; set; }
     
     // Navigation Properties
-    // Note: Purchases will be added when Purchase entity is implemented
-    // public ICollection<Purchase> Purchases { get; set; } = [];
+    public ICollection<Purchase> Purchases { get; set; } = [];
 }

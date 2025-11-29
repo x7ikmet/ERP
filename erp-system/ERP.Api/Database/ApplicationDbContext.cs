@@ -11,6 +11,8 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Sale> Sales { get; set; }
     public DbSet<SaleItem> SaleItems { get; set; }
+    public DbSet<Purchase> Purchases { get; set; }
+    public DbSet<PurchaseItem> PurchaseItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

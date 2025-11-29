@@ -968,6 +968,337 @@
 			]
 		},
 		{
+			"name": "Purchases",
+			"item": [
+				{
+					"name": "Get Purchases",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/purchases",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"purchases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Purchases with Filters",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/purchases?status=draft&search=PURCH-&page=1&pageSize=10",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"purchases"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "draft",
+									"description": "Filter by status: draft, completed, canceled"
+								},
+								{
+									"key": "supplierId",
+									"value": "1",
+									"description": "Filter by supplier ID",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "PURCH-",
+									"description": "Search in purchase number or supplier name"
+								},
+								{
+									"key": "fromDate",
+									"value": "2024-01-01",
+									"description": "Filter from date (YYYY-MM-DD)",
+									"disabled": true
+								},
+								{
+									"key": "toDate",
+									"value": "2024-12-31",
+									"description": "Filter to date (YYYY-MM-DD)",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number"
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"description": "Items per page"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Purchase by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/purchases/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"purchases",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Purchase",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"supplierId\": 1,\r\n  \"items\": [\r\n    {\r\n      \"productId\": 3,\r\n      \"quantity\": 10,\r\n      \"unitCost\": 750.00\r\n    },\r\n    {\r\n      \"productId\": 4,\r\n      \"quantity\": 5,\r\n      \"unitCost\": 120.00\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/purchases",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"purchases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Purchase without Supplier",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": 4,\r\n      \"quantity\": 2,\r\n      \"unitCost\": 25.50\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/purchases",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"purchases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Purchase",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"supplierId\": 2,\r\n  \"status\": \"draft\",\r\n  \"items\": [\r\n    {\r\n      \"id\": 1,\r\n      \"productId\": 1,\r\n      \"quantity\": 15,\r\n      \"unitCost\": 650.00\r\n    },\r\n    {\r\n      \"productId\": 3,\r\n      \"quantity\": 8,\r\n      \"unitCost\": 110.00\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/purchases/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"purchases",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Complete Purchase",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/purchases/:id/complete",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"purchases",
+								":id",
+								"complete"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Purchase",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/purchases/:id/cancel",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"purchases",
+								":id",
+								"cancel"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Purchase",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/purchases/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"purchases",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Sales",
 			"item": [
 				{
