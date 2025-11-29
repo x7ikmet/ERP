@@ -1,23 +1,20 @@
-import { apiClient, type QueryParams, buildQueryString } from './client';
-import type { Category } from './categories';
-import type { Supplier } from './suppliers';
+import { apiClient, type PaginatedResponse, type QueryParams, buildQueryString } from './client';
 
 /**
- * Product types
+ * Product types matching backend structure
  */
 export interface Product {
   id: number;
+  sku?: string;
   name: string;
-  description?: string;
-  sku: string;
-  price: number;
-  cost?: number;
-  stock: number;
-  minStock?: number;
-  categoryId?: number;
-  category?: Category;
-  supplierId?: number;
-  supplier?: Supplier;
+  slug: string;
+  categoryId: number;
+  categoryName: string;
+  categorySlug: string;
+  unitPrice: number;
+  costPrice: number;
+  stockQty: number;
+  barcode?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -25,28 +22,26 @@ export interface Product {
 
 export interface CreateProductRequest {
   name: string;
-  description?: string;
-  sku: string;
-  price: number;
-  cost?: number;
-  stock: number;
-  minStock?: number;
-  categoryId?: number;
-  supplierId?: number;
-  isActive?: boolean;
+  sku?: string;
+  slug: string;
+  categoryId: number;
+  unitPrice: number;
+  costPrice: number;
+  stockQty: number;
+  barcode?: string;
+  isActive: boolean;
 }
 
 export interface UpdateProductRequest extends Partial<CreateProductRequest> {}
 
 export interface ProductQueryParams extends QueryParams {
-  categoryId?: number;
-  supplierId?: number;
-  isActive?: boolean;
-  lowStock?: boolean;
   search?: string;
+  categoryName?: string;
   page?: number;
   pageSize?: number;
 }
+
+export interface ProductsCollection extends PaginatedResponse<Product> {}
 
 /**
  * Products API functions
@@ -55,9 +50,9 @@ export const productsApi = {
   /**
    * Get all products with optional filtering
    */
-  async getProducts(params?: ProductQueryParams): Promise<Product[]> {
+  async getProducts(params?: ProductQueryParams): Promise<ProductsCollection> {
     const queryString = params ? buildQueryString(params) : '';
-    return apiClient.get<Product[]>(`/products${queryString}`);
+    return apiClient.get<ProductsCollection>(`/products${queryString}`);
   },
 
   /**
@@ -77,8 +72,8 @@ export const productsApi = {
   /**
    * Update product by ID
    */
-  async updateProduct(id: number, data: UpdateProductRequest): Promise<Product> {
-    return apiClient.put<Product>(`/products/${id}`, data);
+  async updateProduct(id: number, data: UpdateProductRequest): Promise<void> {
+    return apiClient.put<void>(`/products/${id}`, data);
   },
 
   /**

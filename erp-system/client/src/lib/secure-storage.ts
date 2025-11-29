@@ -118,7 +118,7 @@ export class TokenRefreshManager {
     } catch (error) {
       console.error('Token refresh failed:', error);
       secureTokenManager.clearTokens();
-      window.location.href = '/login';
+      // Don't redirect here - let middleware handle it
     }
   }
 

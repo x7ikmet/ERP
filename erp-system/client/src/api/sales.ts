@@ -1,53 +1,65 @@
 import { apiClient, type QueryParams, type PaginatedResponse, buildQueryString } from './client';
-import type { Customer } from './customers';
-import type { Product } from './products';
 
 /**
- * Sale types
+ * Sale types matching backend structure
  */
 export interface SaleItem {
-  id?: number;
+  id: number;
   productId: number;
-  product?: Product;
+  productName: string;
+  productSku?: string;
   quantity: number;
   unitPrice: number;
-  totalPrice?: number;
+  lineTotal: number;
 }
 
 export interface Sale {
   id: number;
-  saleNo: string;
   customerId?: number;
-  customer?: Customer;
-  status: 'draft' | 'completed' | 'canceled';
-  subtotalAmount: number;
-  taxAmount: number;
+  customerName?: string;
+  saleNo: string;
+  status: string;
   totalAmount: number;
-  items: SaleItem[];
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
+  items: SaleItem[];
+}
+
+export interface CreateSaleItemRequest {
+  productId: number;
+  quantity: number;
+  unitPrice: number;
 }
 
 export interface CreateSaleRequest {
   customerId?: number;
-  items: Omit<SaleItem, 'id' | 'product' | 'totalPrice'>[];
+  items: CreateSaleItemRequest[];
+}
+
+export interface UpdateSaleItemRequest {
+  id?: number;
+  productId: number;
+  quantity: number;
+  unitPrice: number;
 }
 
 export interface UpdateSaleRequest {
   customerId?: number;
-  status?: 'draft' | 'completed' | 'canceled';
-  items: SaleItem[];
+  status?: string;
+  items: UpdateSaleItemRequest[];
 }
 
 export interface SaleQueryParams extends QueryParams {
-  status?: 'draft' | 'completed' | 'canceled';
-  customerId?: number;
+  status?: string;
+  customer?: number;
   search?: string;
   from?: string; // Date string (YYYY-MM-DD)
   to?: string;   // Date string (YYYY-MM-DD)
   page?: number;
   pageSize?: number;
 }
+
+export type SalesCollection = PaginatedResponse<Sale>;
 
 /**
  * Sales API functions
@@ -56,9 +68,9 @@ export const salesApi = {
   /**
    * Get all sales with optional filtering
    */
-  async getSales(params?: SaleQueryParams): Promise<PaginatedResponse<Sale>> {
+  async getSales(params?: SaleQueryParams): Promise<SalesCollection> {
     const queryString = params ? buildQueryString(params) : '';
-    return apiClient.get<PaginatedResponse<Sale>>(`/sales${queryString}`);
+    return apiClient.get<SalesCollection>(`/sales${queryString}`);
   },
 
   /**
@@ -78,22 +90,22 @@ export const salesApi = {
   /**
    * Update sale by ID
    */
-  async updateSale(id: number, data: UpdateSaleRequest): Promise<Sale> {
-    return apiClient.put<Sale>(`/sales/${id}`, data);
+  async updateSale(id: number, data: UpdateSaleRequest): Promise<void> {
+    return apiClient.put<void>(`/sales/${id}`, data);
   },
 
   /**
    * Complete a sale
    */
-  async completeSale(id: number): Promise<Sale> {
-    return apiClient.patch<Sale>(`/sales/${id}/complete`);
+  async completeSale(id: number): Promise<void> {
+    return apiClient.patch<void>(`/sales/${id}/complete`);
   },
 
   /**
    * Cancel a sale
    */
-  async cancelSale(id: number): Promise<Sale> {
-    return apiClient.patch<Sale>(`/sales/${id}/cancel`);
+  async cancelSale(id: number): Promise<void> {
+    return apiClient.patch<void>(`/sales/${id}/cancel`);
   },
 
   /**

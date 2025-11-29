@@ -26,6 +26,10 @@ export interface CategoryQueryParams extends QueryParams {
   pageSize?: number;
 }
 
+export interface CategoriesCollection {
+  items: Category[];
+}
+
 /**
  * Categories API functions
  */
@@ -33,9 +37,9 @@ export const categoriesApi = {
   /**
    * Get all categories with optional filtering
    */
-  async getCategories(params?: CategoryQueryParams): Promise<Category[]> {
+  async getCategories(params?: CategoryQueryParams): Promise<CategoriesCollection> {
     const queryString = params ? buildQueryString(params) : '';
-    return apiClient.get<Category[]>(`/categories${queryString}`);
+    return apiClient.get<CategoriesCollection>(`/categories${queryString}`);
   },
 
   /**

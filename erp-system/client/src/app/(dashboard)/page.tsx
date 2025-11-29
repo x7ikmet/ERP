@@ -85,7 +85,7 @@ export default function DashboardPage() {
         const transformedSales: RecentSale[] = salesResponse.items.map((sale: Sale) => ({
           id: sale.id,
           saleNo: sale.saleNo,
-          customer: sale.customer?.name || null,
+          customer: sale.customerName || null,
           total: sale.totalAmount,
           status: sale.status,
           createdAt: new Date(sale.createdAt).toISOString().split('T')[0]

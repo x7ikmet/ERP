@@ -8,19 +8,24 @@ export interface Supplier {
   name: string;
   email: string;
   phone: string;
-  address: string;
-  contactPerson: string;
+  address?: string;
+  contactPerson?: string;
   isActive: boolean;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
+}
+
+export interface SuppliersCollection {
+  items: Supplier[];
+  totalCount: number;
 }
 
 export interface CreateSupplierRequest {
   name: string;
   email: string;
   phone: string;
-  address: string;
-  contactPerson: string;
+  address?: string;
+  contactPerson?: string;
   isActive?: boolean;
 }
 
@@ -40,9 +45,9 @@ export const suppliersApi = {
   /**
    * Get all suppliers with optional filtering
    */
-  async getSuppliers(params?: SupplierQueryParams): Promise<Supplier[]> {
+  async getSuppliers(params?: SupplierQueryParams): Promise<SuppliersCollection> {
     const queryString = params ? buildQueryString(params) : '';
-    return apiClient.get<Supplier[]>(`/suppliers${queryString}`);
+    return apiClient.get<SuppliersCollection>(`/suppliers${queryString}`);
   },
 
   /**

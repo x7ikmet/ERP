@@ -83,11 +83,13 @@ export class ApiClient {
         // Don't auto-redirect on login attempts - let the component handle it
         const isLoginAttempt = response.url.includes('/api/auth/login');
         if (typeof window !== 'undefined' && !isLoginAttempt) {
+          // Clear tokens and cookies
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
-          setTimeout(() => {
-            window.location.href = '/login';
-          }, 2000); // Delay redirect to allow error message to be seen
+          document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+          document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+          // Let middleware handle redirect by reloading the page
+          window.location.href = window.location.pathname;
         }
         throw new ApiError(
           isLoginAttempt 
