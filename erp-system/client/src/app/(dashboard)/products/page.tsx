@@ -124,7 +124,7 @@ export default function ProductsPage() {
     try {
       setLoading(true);
       const data = await productsApi.getProducts({
-        search: searchTerm || undefined,
+        q: searchTerm || undefined,
         categoryName: selectedCategory === 'all' ? undefined : selectedCategory,
       });
       setProducts(data.items);

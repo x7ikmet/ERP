@@ -43,124 +43,34 @@ const data = {
   ],
   businessModules: [
     {
-      title: "Inventory",
-      icon: IconBoxSeam,
-      isActive: true,
-      url: "/inventory",
-      items: [
-        {
-          title: "Products",
-          url: "/products",
-        },
-        {
-          title: "Categories",
-          url: "/categories",
-        },
-        {
-          title: "Stock Management",
-          url: "/inventory/stock",
-        },
-        {
-          title: "Low Stock Alert",
-          url: "/inventory/alerts",
-        },
-      ],
-    },
-    {
       title: "Sales",
       icon: IconShoppingCart,
       url: "/sales",
-      items: [
-        {
-          title: "All Sales",
-          url: "/sales",
-        },
-        {
-          title: "New Sale",
-          url: "/sales/new",
-        },
-        {
-          title: "Draft Sales",
-          url: "/sales?status=draft",
-        },
-        {
-          title: "Completed Sales",
-          url: "/sales?status=completed",
-        },
-        {
-          title: "Sale Items",
-          url: "/sale-items",
-        },
-      ],
+    },
+    {
+      title: "Purchases",
+      icon: IconPackage,
+      url: "/purchases",
     },
     {
       title: "Customers",
       icon: IconUsers,
       url: "/customers",
-      items: [
-        {
-          title: "All Customers",
-          url: "/customers",
-        },
-        {
-          title: "Add Customer",
-          url: "/customers/new",
-        },
-        {
-          title: "Active Customers",
-          url: "/customers?status=active",
-        },
-        {
-          title: "Customer Sales",
-          url: "/customers/sales",
-        },
-      ],
     },
     {
       title: "Suppliers",
       icon: IconTruck,
       url: "/suppliers",
-      items: [
-        {
-          title: "All Suppliers",
-          url: "/suppliers",
-        },
-        {
-          title: "Add Supplier",
-          url: "/suppliers/new",
-        },
-        {
-          title: "Active Suppliers",
-          url: "/suppliers?status=active",
-        },
-        {
-          title: "Supplier Products",
-          url: "/suppliers/products",
-        },
-      ],
     },
     {
       title: "Products",
-      icon: IconPackage,
+      icon: IconBoxSeam,
       url: "/products",
-      items: [
-        {
-          title: "All Products",
-          url: "/products",
-        },
-        {
-          title: "Add Product",
-          url: "/products/new",
-        },
-        {
-          title: "Product Catalog",
-          url: "/products/catalog",
-        },
-        {
-          title: "Pricing Management",
-          url: "/products/pricing",
-        },
-      ],
+    },
+    {
+      title: "Inventory",
+      icon: IconChartBar,
+      url: "/inventory",
     },
     {
       title: "User Management",

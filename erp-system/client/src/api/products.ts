@@ -35,7 +35,7 @@ export interface CreateProductRequest {
 export interface UpdateProductRequest extends Partial<CreateProductRequest> {}
 
 export interface ProductQueryParams extends QueryParams {
-  search?: string;
+  q?: string;
   categoryName?: string;
   page?: number;
   pageSize?: number;

@@ -12,6 +12,7 @@ import { categoriesApi } from './categories';
 import { suppliersApi } from './suppliers';
 import { customersApi } from './customers';
 import { productsApi } from './products';
+import { purchasesApi } from './purchases';
 import { salesApi } from './sales';
 import { statisticsApi } from './statistics';
 
@@ -73,6 +74,16 @@ export type {
   UpdateProductRequest,
   ProductQueryParams
 } from './products';
+
+// Purchases
+export { purchasesApi };
+export type {
+  Purchase,
+  PurchaseItem,
+  CreatePurchaseRequest,
+  UpdatePurchaseRequest,
+  PurchaseQueryParams
+} from './purchases';
 
 // Sales
 export { salesApi };
