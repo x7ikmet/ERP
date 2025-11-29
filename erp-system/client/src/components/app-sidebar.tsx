@@ -72,37 +72,27 @@ const data = {
       icon: IconChartBar,
       url: "/inventory",
     },
-    {
-      title: "User Management",
-      icon: IconUserCog,
-      url: "/users",
-      items: [
-        {
-          title: "All Users",
-          url: "/users",
-        },
-        {
-          title: "User Profile",
-          url: "/users/profile",
-        },
-        {
-          title: "User Permissions",
-          url: "/users/permissions",
-        },
-      ],
-    },
+    // {
+    //   title: "User Management",
+    //   icon: IconUserCog,
+    //   url: "/users",
+    //   items: [
+    //     {
+    //       title: "All Users",
+    //       url: "/users",
+    //     },
+    //     {
+    //       title: "User Profile",
+    //       url: "/users/profile",
+    //     },
+    //     {
+    //       title: "User Permissions",
+    //       url: "/users/permissions",
+    //     },
+    //   ],
+    // },
   ],
   navSecondary: [
-    {
-      title: "Settings",
-      url: "/settings",
-      icon: IconSettings,
-    },
-    {
-      title: "Help",
-      url: "/help",
-      icon: IconHelp,
-    },
   ],
   analytics: [
     {

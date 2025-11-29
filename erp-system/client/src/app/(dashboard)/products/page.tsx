@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { productsApi, type Product, type CreateProductRequest } from '@/api';
-import { categoriesApi, type Category } from '@/api';
+import { categoriesApi, type Category, type CreateCategoryRequest } from '@/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -61,15 +61,14 @@ import {
   Package,
   Plus,
   Search,
+  Tag,
   MoreHorizontal,
   Edit,
   Trash2,
   DollarSign,
   Package2,
   BarChart3,
-  Hash,
-  Tag,
-  AlertTriangle
+  Hash
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -82,6 +81,12 @@ export default function ProductsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
+  const [isCreateCategoryDialogOpen, setIsCreateCategoryDialogOpen] = useState(false);
+  const [categoryFormData, setCategoryFormData] = useState<CreateCategoryRequest>({
+    name: '',
+    slug: '',
+    description: ''
+  });
   const [formData, setFormData] = useState<CreateProductRequest>({
     name: '',
     sku: '',
@@ -156,6 +161,46 @@ export default function ProductsPage() {
     fetchProducts();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, selectedCategory]);
+
+  // Generate slug from category name
+  const handleCategoryNameChange = (name: string) => {
+    const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    setCategoryFormData({ ...categoryFormData, name, slug });
+  };
+
+  // Reset category form data
+  const resetCategoryForm = () => {
+    setCategoryFormData({
+      name: '',
+      slug: '',
+      description: ''
+    });
+  };
+
+  // Handle category form submission
+  const handleCategorySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!categoryFormData.name.trim() || !categoryFormData.slug.trim()) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      await categoriesApi.createCategory(categoryFormData);
+      toast.success('Category created successfully!');
+      
+      // Refresh categories list
+      await fetchCategories();
+      
+      // Close dialog and reset form
+      setIsCreateCategoryDialogOpen(false);
+      resetCategoryForm();
+    } catch (error) {
+      console.error('Failed to create category:', error);
+      toast.error('Failed to create category. Please try again.');
+    }
+  };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -296,14 +341,81 @@ export default function ProductsPage() {
             <p className="text-muted-foreground">Manage your product inventory and catalog efficiently.</p>
           </div>
           
-          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => setIsCreateDialogOpen(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                Add Product
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px]">
+          <div className="flex items-center gap-2">
+            <Dialog open={isCreateCategoryDialogOpen} onOpenChange={setIsCreateCategoryDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" onClick={() => setIsCreateCategoryDialogOpen(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create Category
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Create New Category</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleCategorySubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="categoryName">Category Name *</Label>
+                    <Input
+                      id="categoryName"
+                      value={categoryFormData.name}
+                      onChange={(e) => handleCategoryNameChange(e.target.value)}
+                      placeholder="Electronics, Clothing, Books..."
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="categorySlug">URL Slug *</Label>
+                    <Input
+                      id="categorySlug"
+                      value={categoryFormData.slug}
+                      onChange={(e) => setCategoryFormData({ ...categoryFormData, slug: e.target.value })}
+                      placeholder="electronics, clothing, books..."
+                      required
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Used in URLs. Auto-generated from name but can be customized.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="categoryDescription">Description (Optional)</Label>
+                    <Input
+                      id="categoryDescription"
+                      value={categoryFormData.description}
+                      onChange={(e) => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
+                      placeholder="Brief description of this category..."
+                    />
+                  </div>
+                  
+                  <div className="flex justify-end space-x-2 pt-4">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => {
+                        setIsCreateCategoryDialogOpen(false);
+                        resetCategoryForm();
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit">
+                      Create Category
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+            
+            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={() => setIsCreateDialogOpen(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Product
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[700px]">
               <DialogHeader>
                 <DialogTitle>
                   {editingProduct ? 'Edit Product' : 'Create New Product'}
@@ -435,6 +547,7 @@ export default function ProductsPage() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {/* Filters and Search */}
@@ -609,7 +722,7 @@ export default function ProductsPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Product</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete "{deletingProduct?.name}"? This action cannot be undone and will affect any related sales records.
+                Are you sure you want to delete &quot;{deletingProduct?.name}&quot;? This action cannot be undone and will affect any related sales records.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
