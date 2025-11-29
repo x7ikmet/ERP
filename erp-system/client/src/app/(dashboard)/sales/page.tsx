@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { salesApi, type Sale, type CreateSaleRequest } from '@/api';
 import { customersApi, type Customer } from '@/api';
 import { productsApi, type Product } from '@/api';
@@ -99,12 +99,64 @@ export default function SalesPage() {
   }>({
     items: [{ productId: 0, quantity: 1, unitPrice: 0 }]
   });
+  
+  const [productSearchTerms, setProductSearchTerms] = useState<string[]>(['']);
+  const [filteredProducts, setFilteredProducts] = useState<Product[][]>([]);
+
+  // Search products via API
+  const searchProducts = async (searchTerm: string, itemIndex: number) => {
+    if (!searchTerm.trim()) {
+      // If no search term, show all products
+      const newFilteredProducts = [...filteredProducts];
+      newFilteredProducts[itemIndex] = products;
+      setFilteredProducts(newFilteredProducts);
+      return;
+    }
+
+    try {
+      const data = await productsApi.getProducts({ q: searchTerm });
+      const newFilteredProducts = [...filteredProducts];
+      newFilteredProducts[itemIndex] = data.items || [];
+      setFilteredProducts(newFilteredProducts);
+    } catch (error) {
+      console.error('Failed to search products:', error);
+      // Fallback to client-side filtering if API fails
+      const filtered = products.filter(product => 
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.sku?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      const newFilteredProducts = [...filteredProducts];
+      newFilteredProducts[itemIndex] = filtered;
+      setFilteredProducts(newFilteredProducts);
+    }
+  };
+
+  // Debounced search to avoid too many API calls
+  const debounceTimeout = React.useRef<NodeJS.Timeout | null>(null);
+  
+  const handleProductSearch = (searchTerm: string, itemIndex: number) => {
+    const newSearchTerms = [...productSearchTerms];
+    newSearchTerms[itemIndex] = searchTerm;
+    setProductSearchTerms(newSearchTerms);
+
+    // Clear previous timeout
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    // Set new timeout for debounced search
+    debounceTimeout.current = setTimeout(() => {
+      searchProducts(searchTerm, itemIndex);
+    }, 300); // 300ms delay
+  };
 
   // Reset form data
   const resetForm = () => {
     setFormData({
       items: [{ productId: 0, quantity: 1, unitPrice: 0 }]
     });
+    setProductSearchTerms(['']);
+    setFilteredProducts([products]); // Reset to show all products for first item
   };
 
   // Fetch sales data
@@ -151,6 +203,13 @@ export default function SalesPage() {
     fetchProducts();
   }, []);
 
+  // Initialize filtered products when products are loaded
+  useEffect(() => {
+    if (products.length > 0 && filteredProducts.length === 0) {
+      setFilteredProducts([products]); // Initialize first item with all products
+    }
+  }, [products, filteredProducts.length]);
+
   useEffect(() => {
     fetchSales();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -162,6 +221,8 @@ export default function SalesPage() {
       ...prev,
       items: [...prev.items, { productId: 0, quantity: 1, unitPrice: 0 }]
     }));
+    setProductSearchTerms(prev => [...prev, '']);
+    setFilteredProducts(prev => [...prev, products]); // Initialize with all products
   };
 
   // Remove item from form
@@ -170,6 +231,8 @@ export default function SalesPage() {
       ...prev,
       items: prev.items.filter((_, i) => i !== index)
     }));
+    setProductSearchTerms(prev => prev.filter((_, i) => i !== index));
+    setFilteredProducts(prev => prev.filter((_, i) => i !== index));
   };
 
   // Update item in form
@@ -318,19 +381,32 @@ export default function SalesPage() {
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="customer">Customer (Optional)</Label>
+                  <Label htmlFor="customer" className="text-sm font-medium">
+                    Customer <span className="text-muted-foreground">(Optional)</span>
+                  </Label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Select a customer for this sale, or leave blank for walk-in sales
+                  </p>
                   <Select 
                     value={formData.customerId ? formData.customerId.toString() : 'none'} 
                     onValueChange={(value) => setFormData({ ...formData, customerId: value === 'none' ? undefined : parseInt(value) })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select customer (optional)" />
+                      <SelectValue placeholder="Choose customer or walk-in sale..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">No Customer (Walk-in)</SelectItem>
+                      <SelectItem value="none">
+                        <div className="flex flex-col items-start">
+                          <span className="font-medium">Walk-in Sale</span>
+                          <span className="text-xs text-muted-foreground">No customer required</span>
+                        </div>
+                      </SelectItem>
                       {customers && customers.map((customer) => (
                         <SelectItem key={customer.id} value={customer.id.toString()}>
-                          {customer.name} - {customer.email}
+                          <div className="flex flex-col items-start">
+                            <span className="font-medium">{customer.name}</span>
+                            <span className="text-xs text-muted-foreground">{customer.email}</span>
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -339,17 +415,27 @@ export default function SalesPage() {
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label>Sale Items</Label>
+                    <Label className="text-base font-medium">Sale Items</Label>
                     <Button type="button" onClick={addItem} size="sm">
                       <Plus className="mr-2 h-3 w-3" />
                       Add Item
                     </Button>
                   </div>
+
+                  {/* Column Headers */}
+                  <div className="flex gap-2 px-3 py-2 bg-muted/30 rounded-lg text-xs font-medium text-muted-foreground">
+                    <div className="flex-1">Product</div>
+                    <div className="w-20 text-center">Quantity</div>
+                    <div className="w-28 text-center">Unit Price ($)</div>
+                    <div className="w-28 text-center">Line Total</div>
+                    <div className="w-10"></div>
+                  </div>
                   
                   <div className="space-y-3">
                     {formData.items.map((item, index) => (
                       <div key={index} className="flex gap-2 p-3 border rounded-lg">
-                        <div className="flex-1">
+                        <div className="flex-1 space-y-1">
+                          <Label className="text-xs text-muted-foreground">Product *</Label>
                           <Select
                             value={item.productId > 0 ? item.productId.toString() : undefined}
                             onValueChange={(value) => {
@@ -362,39 +448,58 @@ export default function SalesPage() {
                             }}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="Select product" />
+                              <SelectValue placeholder="Search and select product..." />
                             </SelectTrigger>
                             <SelectContent>
-                              {products && products.map((product) => (
+                              <div className="p-2">
+                                <Input
+                                  placeholder="Type to search products..."
+                                  className="h-8"
+                                  value={productSearchTerms[index] || ''}
+                                  onChange={(e) => {
+                                    handleProductSearch(e.target.value, index);
+                                  }}
+                                />
+                              </div>
+                              {(filteredProducts[index] || products || []).map((product) => (
                                 <SelectItem key={product.id} value={product.id.toString()}>
-                                  {product.name} - {formatCurrency(product.unitPrice)}
-                                  {product.sku && ` (${product.sku})`}
+                                  <div className="flex flex-col items-start">
+                                    <span className="font-medium">{product.name}</span>
+                                    <div className="flex gap-2 text-xs text-muted-foreground">
+                                      {product.sku && <span>SKU: {product.sku}</span>}
+                                      <span>Price: {formatCurrency(product.unitPrice)}</span>
+                                      <span>Stock: {product.stockQty}</span>
+                                    </div>
+                                  </div>
                                 </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
                         </div>
-                        <div className="w-20">
+                        <div className="w-20 space-y-1">
+                          <Label className="text-xs text-muted-foreground">Quantity *</Label>
                           <Input
                             type="number"
-                            placeholder="Qty"
+                            placeholder="1"
                             min="1"
                             value={item.quantity}
                             onChange={(e) => updateItem(index, 'quantity', parseInt(e.target.value) || 1)}
                           />
                         </div>
-                        <div className="w-28">
+                        <div className="w-28 space-y-1">
+                          <Label className="text-xs text-muted-foreground">Unit Price *</Label>
                           <Input
                             type="number"
-                            placeholder="Price"
+                            placeholder="0.00"
                             step="0.01"
                             min="0"
                             value={item.unitPrice}
                             onChange={(e) => updateItem(index, 'unitPrice', parseFloat(e.target.value) || 0)}
                           />
                         </div>
-                        <div className="w-28 flex items-center justify-end">
-                          <span className="text-sm font-medium">
+                        <div className="w-28 flex flex-col items-end justify-end space-y-1">
+                          <Label className="text-xs text-muted-foreground">Total</Label>
+                          <span className="text-sm font-medium text-green-600">
                             {formatCurrency(item.quantity * item.unitPrice)}
                           </span>
                         </div>
